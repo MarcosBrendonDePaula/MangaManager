@@ -1,1 +1,1 @@
-# MangaMananger
+# MangaManager
