@@ -1,9 +1,6 @@
-from bs4 import BeautifulSoup
-import os
-import cloudscraper
-from Manga.Manga import Manga
+from Modules.Module import *
 
-class Neox:
+class Neox(Module):
     def __init__(self):
         pass
 
@@ -31,7 +28,9 @@ class Neox:
         r = scraper.get(manga_link)
         scrap = BeautifulSoup(r.content,'html.parser')
 
-        Name = scrap.find(class_="post-title").find("h1").text
+        Name = scrap.find(class_="post-title").find("h1").text.lower()
+        if Name[-1] == " ":
+            Name = Name[:-1]
         Name = Name.replace("\n","")
         Caps = []
         for cap in scrap.find_all(class_="wp-manga-chapter"):
