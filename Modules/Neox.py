@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import os
 import cloudscraper
 from Manga.Manga import Manga
 
@@ -7,23 +8,21 @@ class Neox:
         pass
 
     def __CapDownloader__(self,manga,cap_link,capNum=0):
-        print("downloading:"+cap_link)
         scraper = cloudscraper.create_scraper(browser={
             'browser': 'firefox',
             'platform': 'windows',
             'mobile': False
         })
+
         r = scraper.get(cap_link)
         scrap = BeautifulSoup(r.content, 'html.parser')
         divs = scrap.findAll("div",class_="page-break")
         for div in divs:
             img = div.find("img").attrs["data-src"]
-            print("ImageDownloading:"+img)
             manga.GetCap(capNum).AddPage(img)
-
         pass
-
-    def __UpdateInfos__(self,manga_link,type="Manhua",path = "."):
+    
+    def __UpdateInfo__(self,manga_link="",type="Manhua",path = os.getcwdb().decode("ascii")):
         scraper = cloudscraper.create_scraper(browser={
             'browser': 'firefox',
             'platform': 'windows',
@@ -34,7 +33,6 @@ class Neox:
 
         Name = scrap.find(class_="post-title").find("h1").text
         Name = Name.replace("\n","")
-        print(Name)
         Caps = []
         for cap in scrap.find_all(class_="wp-manga-chapter"):
             Caps.append((str(cap.find("a").text).split("Cap. ")[1],cap.find("a").attrs["href"]))
@@ -49,10 +47,6 @@ class Neox:
         manga.Desc = Desc
         manga.Genre = Genre
         manga.type = type
+        manga.module = Neox()
         manga.__UpdateObj__()
-        count = 0
-        for cap in Caps[::-1]:
-            self.__CapDownloader__(manga,cap[1],count)
-            count += 1
-            pass
 

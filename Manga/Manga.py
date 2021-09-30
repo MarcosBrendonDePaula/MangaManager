@@ -11,6 +11,7 @@ class Manga:
         self.Desc    = ""
         self.Genre   = []
         self.type    = ""
+        self.module  = None
         self.directory = path+"/"+base64.b64encode(self.Name.encode('ascii')).decode('ascii')
         self.__CheckOrCreateFolder__()
 
@@ -40,10 +41,9 @@ class Manga:
     def __CheckOrCreateFolder__(self):
         try:
             if os.path.exists(self.directory):
-                print("Abrindo")
                 obj = open(self.directory+"/obj.manga", "rb")
                 temp = pickle.load(obj)
-
+                self.module = temp.module
                 self.Name = temp.Name
                 self.Chapters = temp.Chapters
                 self.Img = temp.Img
@@ -52,7 +52,6 @@ class Manga:
                 self.type = temp.type
                 obj.close()
                 return
-                pass
             else:
                 print("Criando")
                 os.mkdir(self.directory)
@@ -65,3 +64,19 @@ class Manga:
         obj = open(self.directory +"/obj.manga", "wb")
         pickle.dump(self, obj)
         obj.close()
+    
+    def __CapDownload__(self,num):
+        if(self.module == None):
+            print("modulo não adicionado!")
+            return
+        self.module.__CapDownloader__(self,self.Chapters[::-1][num][1],num)
+        
+    def __AllCapDownload__(self):
+        if(self.module == None):
+            print("modulo não adicionado!")
+            return
+        count = 0
+        for cap in self.Chapters[::-1]:
+            self.module.__CapDownloader__(self,cap[1],count)
+            count += 1
+            pass
