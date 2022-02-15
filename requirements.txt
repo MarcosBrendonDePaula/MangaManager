@@ -4,7 +4,7 @@ charset-normalizer==2.0.6
 cloudscraper==1.2.58
 colorama==0.4.4
 idna==3.2
-Pillow==8.3.2
+Pillow==9.0.0
 pyparsing==2.4.7
 requests==2.26.0
 requests-toolbelt==0.9.1
